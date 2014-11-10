@@ -86,7 +86,9 @@ class LoggerAppenderFile extends LoggerAppender {
 			$dir = dirname($file);
 
 			if(!is_dir($dir)) {
+				$oldmask = umask(0);
 				$success = mkdir($dir, 0777, true);
+				umask($oldmask);
 				if ($success === false) {
 					$this->warn("Failed creating target directory [$dir]. Closing appender.");
 					$this->closed = true;
