@@ -1,0 +1,8 @@
+{
+   "files" : [
+      {
+         "skip" : true,
+         "filename" : "src/test/resources/configs/adapters/php/config_invalid_syntax.php"
+      }
+   ]
+}
