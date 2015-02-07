@@ -103,7 +103,12 @@ class Logger {
 	 */
 	public function trace($message, $throwable = null) {
 		$this->log(LoggerLevel::getLevelTrace(), $message, $throwable);
-	} 		
+    }
+
+    public function tracev() {
+        list($format, $args, $throwable) = $this->split_args(func_get_args());
+        $this->log(LoggerLevel::getLevelTrace(), vsprintf($format, $args), $throwable);
+    }
 	
 	/**
 	 * Log a message object with the DEBUG level.
@@ -114,7 +119,12 @@ class Logger {
 	 */
 	public function debug($message, $throwable = null) {
 		$this->log(LoggerLevel::getLevelDebug(), $message, $throwable);
-	} 
+	}
+
+    public function debugv() {
+        list($format, $args, $throwable) = $this->split_args(func_get_args());
+        $this->log(LoggerLevel::getLevelDebug(), vsprintf($format, $args), $throwable);
+    }
 
 	/**
 	 * Log a message object with the INFO Level.
@@ -127,6 +137,13 @@ class Logger {
 		$this->log(LoggerLevel::getLevelInfo(), $message, $throwable);
 	}
 
+    public function infov() {
+        list($format, $args, $throwable) = $this->split_args(func_get_args());
+        $args = func_get_args();
+        $format = array_shift($args);
+        $this->log(LoggerLevel::getLevelInfo(), vsprintf($format, $args), $throwable);
+    }
+
 	/**
 	 * Log a message with the WARN level.
 	 *
@@ -137,6 +154,11 @@ class Logger {
 	public function warn($message, $throwable = null) {
 		$this->log(LoggerLevel::getLevelWarn(), $message, $throwable);
 	}
+
+    public function warnv() {
+        list($format, $args, $throwable) = $this->split_args(func_get_args());
+        $this->log(LoggerLevel::getLevelWarn(), vsprintf($format, $args), $throwable);
+    }
 	
 	/**
 	 * Log a message object with the ERROR level.
@@ -148,6 +170,12 @@ class Logger {
 	public function error($message, $throwable = null) {
 		$this->log(LoggerLevel::getLevelError(), $message, $throwable);
 	}
+
+    public function errorv() {
+        list($format, $args, $throwable) = $this->split_args(func_get_args());
+        $this->log(LoggerLevel::getLevelError(), vsprintf($format, $args), $throwable);
+    }
+	
 	
 	/**
 	 * Log a message object with the FATAL level.
@@ -159,6 +187,21 @@ class Logger {
 	public function fatal($message, $throwable = null) {
 		$this->log(LoggerLevel::getLevelFatal(), $message, $throwable);
 	}
+    
+    public function fatalv() {
+        list($format, $args, $throwable) = $this->split_args(func_get_args());
+        $this->log(LoggerLevel::getLevelFatal(), vsprintf($format, $args), $throwable);
+    }
+
+    private function split_args($args) {
+        $format = array_shift($args);
+        $throwable = array_pop($args);
+        if (!$throwable instanceof Exception) {
+            $args[] = $throwable;
+            $throwable = null;
+        }
+        return array($format, $args, $throwable);
+    }
 
 	/**
 	 * Log a message using the provided logging level.
